@@ -3,11 +3,12 @@
 
 
 typedef struct _WindowSize {
-	unsigned short columns;
-	unsigned short rows;
+	unsigned short columns;	/* number of characters in a row */
+	unsigned short rows;	/* number of rows in window */
 } WindowSize;
 
 
+/* Returns size of console window as number of columns (characters in row) and rows */
 WindowSize get_window_size();
 
 
@@ -18,7 +19,7 @@ int main(int argc, char *argv[]) {
 	while (1) {
 		wSize = get_window_size();
 		for (i = 0; i < wSize.columns; i++) putchar('_');
-		getchar();
+		getchar(); // temporary
 	}
 	
 	return 0;
