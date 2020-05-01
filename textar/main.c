@@ -17,7 +17,7 @@ int main(int argc, char *argv[]) {
 	
 	oldSize.X = 0;
 	oldSize.Y = 0;
-	c = NULL;
+	c = EMPTY_CHAR;
 
 	/* clear console after start */
 	clear_cmd();
@@ -35,7 +35,7 @@ int main(int argc, char *argv[]) {
 			for (i = 0; i < wSize.X; i++) putchar('_');
 			putchar('\n');
 			goto_bottom_left();
-			putchar('C');
+			printf("crtl-x: Exit");
 
 			gotoxy(0, 1);
 		}
@@ -46,17 +46,22 @@ int main(int argc, char *argv[]) {
 		}
 
 		switch (c) {
+
+			/* crtl-x pressed - exit */
 			case CTRL_KEYPRESS('x'):
 				return 0;
-			case NULL:
+			
+			/* nothing pressed - continue */
+			case EMPTY_CHAR:
 				break;
+
+			/* typing - put char to screen */
 			default:
 				putchar(c);
-				c = NULL;
+				c = EMPTY_CHAR;
 				break;
 		}
 	}
 	
 	return 0;
 }
-
