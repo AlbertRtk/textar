@@ -4,7 +4,7 @@
 #include "common.h"
 
 
-/*  */
+/* Print horizontal separator at full width of cmd window */
 static void print_horizontal_separator(const short width);
 
 
