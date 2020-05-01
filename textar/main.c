@@ -23,8 +23,7 @@ int main(int argc, char *argv[]) {
 
 		/* widnow width changed - print everthing again to adjust to new width */
 		if (NOT(are_coords_equal(&oldSize, &wSize))) {
-			oldSize.X = wSize.X;
-			oldSize.Y = wSize.Y;
+			copy_coord(&wSize, &oldSize);
 			goto_top_left();
 			for (i = 0; i < wSize.X; i++) putchar('_');
 			putchar('\n');

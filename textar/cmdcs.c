@@ -55,3 +55,9 @@ bool are_coords_equal(const COORD *coord1, const COORD *coord2) {
 
 	return f_equal;
 }
+
+
+void copy_coord(const COORD *src, COORD *dst) {
+	dst->X = src->X;
+	dst->Y = src->Y;
+}
