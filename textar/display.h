@@ -8,8 +8,12 @@
 void clear_cmd();
 
 
-/* Clears cmd if the size of window changed */
-void clear_if_window_changed_size(const COORD *oldSize);
+/*  */
+void display_header(const COORD *wSize);
+
+
+/*  */
+void display_footer(const COORD *wSize);
 
 
 #endif

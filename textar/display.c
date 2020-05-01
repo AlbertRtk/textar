@@ -1,6 +1,17 @@
+﻿#include <stdio.h>
 #include "display.h"
 #include "cmdcs.h"
 #include "common.h"
+
+
+/*  */
+static void print_horizontal_separator(const short width);
+
+
+static void print_horizontal_separator(const short width) {
+	int i;
+	for (i = 0; i < width; i++) putchar('_');
+}
 
 
 void clear_cmd() {
@@ -8,12 +19,18 @@ void clear_cmd() {
 }
 
 
-void clear_if_window_changed_size(const COORD *oldSize) {
-	COORD sizeNow;
-
-	sizeNow = get_window_size();
-
-	if (NOT(are_coords_equal(&sizeNow, oldSize))) {
-		clear_cmd();
-	}
+void display_header(const COORD *wSize) {
+	goto_top_left();
+	printf("New file\n");
+	print_horizontal_separator(wSize->X);
 }
+
+
+void display_footer(const COORD *wSize) {
+	gotoxy(0, wSize->Y - 2);
+	print_horizontal_separator(wSize->X);
+	goto_bottom_left();
+	printf("crtl-x: Exit | ");
+}
+
+
