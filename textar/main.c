@@ -2,37 +2,57 @@
 #include <windows.h>
 
 
-typedef struct _WindowSize {
-	unsigned short columns;	/* number of characters in a row */
-	unsigned short rows;	/* number of rows in window */
-} WindowSize;
-
-
 /* Returns size of console window as number of columns (characters in row) and rows */
-WindowSize get_window_size();
+COORD get_window_size();
+
+void gotoxy(int x, int y);
 
 
 int main(int argc, char *argv[]) {
-	WindowSize wSize;
+	COORD wSize;
+	int oldWidth = 0;
 	int i;
+
+	/* clear console after start */
+	system("@cls || clear");
 	
 	while (1) {
 		wSize = get_window_size();
-		for (i = 0; i < wSize.columns; i++) putchar('_');
-		getchar(); // temporary
+
+		/* window width reduced - clear console to remove extra print of title / header */
+		if (oldWidth > wSize.X) {
+			system("@cls || clear");
+		}
+
+		/* widnow width changed - print everthing again to adjust to new width */
+		if (oldWidth != wSize.X) {
+			oldWidth = wSize.X;
+			gotoxy(0, 0);
+			for (i = 0; i < wSize.X; i++) putchar('_');
+			putchar('\n');
+		}
 	}
 	
 	return 0;
 }
 
 
-WindowSize get_window_size() {
-	WindowSize wSize;
+COORD get_window_size() {
+	COORD wSize;
 	CONSOLE_SCREEN_BUFFER_INFO csbi;
 
 	GetConsoleScreenBufferInfo(GetStdHandle(STD_OUTPUT_HANDLE), &csbi);
-	wSize.columns = csbi.srWindow.Right - csbi.srWindow.Left + 1;
-	wSize.rows = csbi.srWindow.Bottom - csbi.srWindow.Top + 1;
+	wSize.X = csbi.srWindow.Right - csbi.srWindow.Left + 1;
+	wSize.Y = csbi.srWindow.Bottom - csbi.srWindow.Top + 1;
 
 	return wSize;
+}
+
+
+void gotoxy(int x, int y)
+{
+	COORD coord;
+	coord.X = x;
+	coord.Y = y;
+	SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), coord);
 }
