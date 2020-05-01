@@ -1,58 +1,38 @@
-#include <stdio.h>
-#include <windows.h>
-
-
-/* Returns size of console window as number of columns (characters in row) and rows */
-COORD get_window_size();
-
-void gotoxy(int x, int y);
+﻿#include <stdio.h>
+#include <stdbool.h>
+#include "cmdcs.h"
+#include "common.h"
 
 
 int main(int argc, char *argv[]) {
 	COORD wSize;
-	int oldWidth = 0;
+	COORD oldSize;
 	int i;
+	
+	oldSize.X = 0;
+	oldSize.Y = 0;
 
 	/* clear console after start */
 	system("@cls || clear");
 	
-	while (1) {
+	while (true) {
 		wSize = get_window_size();
-
-		/* window width reduced - clear console to remove extra print of title / header */
-		if (oldWidth > wSize.X) {
-			system("@cls || clear");
-		}
+		
+		/* clear console to remove extra print of title, header, ... */
+		clear_if_window_changed_size(&oldSize);
 
 		/* widnow width changed - print everthing again to adjust to new width */
-		if (oldWidth != wSize.X) {
-			oldWidth = wSize.X;
-			gotoxy(0, 0);
+		if (NOT(are_coords_equal(&oldSize, &wSize))) {
+			oldSize.X = wSize.X;
+			oldSize.Y = wSize.Y;
+			goto_top_left();
 			for (i = 0; i < wSize.X; i++) putchar('_');
 			putchar('\n');
+			goto_bottom_left();
+			putchar('C');
 		}
 	}
 	
 	return 0;
 }
 
-
-COORD get_window_size() {
-	COORD wSize;
-	CONSOLE_SCREEN_BUFFER_INFO csbi;
-
-	GetConsoleScreenBufferInfo(GetStdHandle(STD_OUTPUT_HANDLE), &csbi);
-	wSize.X = csbi.srWindow.Right - csbi.srWindow.Left + 1;
-	wSize.Y = csbi.srWindow.Bottom - csbi.srWindow.Top + 1;
-
-	return wSize;
-}
-
-
-void gotoxy(int x, int y)
-{
-	COORD coord;
-	coord.X = x;
-	coord.Y = y;
-	SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), coord);
-}
