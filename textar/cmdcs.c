@@ -35,17 +35,6 @@ void goto_bottom_left() {
 }
 
 
-void clear_if_window_changed_size(const COORD *oldSize) {
-	COORD sizeNow;
-
-	sizeNow = get_window_size();
-
-	if (oldSize->X != sizeNow.X || oldSize->Y != sizeNow.Y) {
-		system("@cls || clear");
-	}
-}
-
-
 bool are_coords_equal(const COORD *coord1, const COORD *coord2) {
 	bool f_equal = false;
 

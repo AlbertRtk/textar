@@ -25,10 +25,6 @@ void goto_top_left();
 void goto_bottom_left();
 
 
-/* Clears cmd if the size of window changed */
-void clear_if_window_changed_size(const COORD *oldSize);
-
-
 /* Checks if coordinates are equal. Returns true if coordinates are equal */
 bool are_coords_equal(const COORD *coord1, const COORD *coord2);
 
