@@ -49,6 +49,7 @@ int main(int argc, char *argv[]) {
 
 			/* crtl-x pressed - exit */
 			case CTRL_KEYPRESS('x'):
+				clear_cmd();
 				return 0;
 			
 			/* nothing pressed - continue */
