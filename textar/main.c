@@ -4,6 +4,7 @@
 #include "cmdcs.h"
 #include "display.h"
 #include "common.h"
+#include "texteditor.h"
 
 
 #define CTRL_KEYPRESS(k) ((k) & 0x1f)
@@ -13,14 +14,17 @@ int main(int argc, char *argv[]) {
 	COORD wSize;
 	COORD oldSize;
 	char c;
+	Textfile editedFile;
 	
 	oldSize.X = 0;
 	oldSize.Y = 0;
-	c = EMPTY_CHAR;
+	c = NULL_CHAR;
 
 	/* clear console after start */
 	clear_cmd();
 	
+	init_textfile(&editedFile);
+
 	while (true) {
 		wSize = get_window_size();
 
@@ -47,19 +51,20 @@ int main(int argc, char *argv[]) {
 				return 0;
 			
 			/* nothing pressed - continue */
-			case EMPTY_CHAR:
+			case NULL_CHAR:
 				break;
 
 			/* Enter hit - put new line */
 			case ENTER_ASCII_VALUE:
 				putchar(NEW_LINE);
-				c = EMPTY_CHAR;
+				c = NULL_CHAR;
 				break;
 
 			/* typing - put char to screen */
 			default:
+				putchar_to_text_at_position(&editedFile.text, c, 0);
 				putchar(c);
-				c = EMPTY_CHAR;
+				c = NULL_CHAR;
 				break;
 		}
 	}
