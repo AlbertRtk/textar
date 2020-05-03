@@ -22,13 +22,12 @@ void putchar_to_text_at_position(char **text, char c, int posn) {
 	newLen = strlen(*text) + 2;
 
 	/* memory for text realloc */
-	*text = (char *)realloc(*text, newLen);
-	
-	/*  */
-	strcat_s(*text, newLen, newChar);
+	*text = (char *)realloc(*text, newLen);	// MEMORY LEAK ??
 
-	/*for (i = len; i > posn; i--) {
-		*text[i] = *text[i - 1];
+	/* from the end of string down to the posn move characters one position up */
+	for (i = newLen; i > posn; i--) {
+		(*text)[i] = (*text)[i - 1];
 	}
-	*text[posn] = c;*/
+	/* at position posn place new character c */
+	(*text)[posn] = c;
 }
