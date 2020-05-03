@@ -2,25 +2,25 @@
 #define TEXTEDITOR_H
 
 
-typedef struct Textfile_T {
+typedef struct EditedFile_T {
 	char *name;				// name of edited file
-	char *text;				// content of edited file
+	char *content;				// content of edited file
 	int cursorPosition;		// position of cursors in edited string (file content)
-} Textfile;
+} EditedFile;
 
 
-void init_textfile(Textfile *file);
+void init_file(EditedFile *file);
 
 
 /* function puts character c into text at given position posn */
-void put_char_to_text_at_position(char **text, char c, int posn);
+void put_char_into_string_at_position(char **text, char c, int posn);
 
 
 /*  */
-void put_char_to_textfile_at_cursor_position(Textfile *file, char c);
+void put_char_into_file_content_at_cursor_position(EditedFile *file, char c);
 
 
 
-void save_textfile(Textfile *file);
+void save_edited_file(EditedFile *file);
 
 #endif

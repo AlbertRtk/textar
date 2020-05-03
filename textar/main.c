@@ -14,7 +14,7 @@ int main(int argc, char *argv[]) {
 	COORD wSize;
 	COORD oldSize;
 	char c;
-	Textfile editedFile;
+	EditedFile editedFile;
 	
 	oldSize.X = 0;
 	oldSize.Y = 0;
@@ -23,7 +23,7 @@ int main(int argc, char *argv[]) {
 	/* clear console after start */
 	clear_cmd();
 	
-	init_textfile(&editedFile);
+	init_file(&editedFile);
 
 	while (true) {
 		wSize = get_window_size();
@@ -47,7 +47,7 @@ int main(int argc, char *argv[]) {
 
 			/* crtl-x pressed - exit */
 			case CTRL_KEYPRESS('x'):
-				save_textfile(&editedFile);
+				save_edited_file(&editedFile);
 				clear_cmd();
 				return 0;
 			
@@ -57,14 +57,14 @@ int main(int argc, char *argv[]) {
 
 			/* Enter hit - put new line */
 			case ENTER_ASCII_VALUE:
-				put_char_to_textfile_at_cursor_position(&editedFile, NEW_LINE);
+				put_char_into_file_content_at_cursor_position(&editedFile, NEW_LINE);
 				putchar(NEW_LINE);
 				c = NULL_CHAR;
 				break;
 
 			/* typing - put char to screen */
 			default:
-				put_char_to_textfile_at_cursor_position(&editedFile, c);
+				put_char_into_file_content_at_cursor_position(&editedFile, c);
 				putchar(c);
 				c = NULL_CHAR;
 				break;

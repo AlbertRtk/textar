@@ -6,20 +6,20 @@
 #include <stdio.h>
 
 
-void init_textfile(Textfile *file) {
+void init_file(EditedFile *file) {
 
 	file->name = (char*)malloc(1);
 	file->name = (char*)realloc(file->name, 13);
 	strcpy_s(file->name, 13, "New file.txt");
 
-	file->text = (char*)malloc(1);
-	file->text[0] = NULL_CHAR;
+	file->content = (char*)malloc(1);
+	file->content[0] = NULL_CHAR;
 
 	file->cursorPosition = 0;
 }
 
 
-void put_char_to_text_at_position(char **text, char c, int posn) {
+void put_char_into_string_at_position(char **text, char c, int posn) {
 	int i;
 	int newLen;
 	char newChar[2] = { c, NULL_CHAR };
@@ -39,16 +39,16 @@ void put_char_to_text_at_position(char **text, char c, int posn) {
 }
 
 
-void put_char_to_textfile_at_cursor_position(Textfile *file, char c) {
+void put_char_into_file_content_at_cursor_position(EditedFile *file, char c) {
 	/* put char into text */
-	put_char_to_text_at_position(&file->text, c, file->cursorPosition);
+	put_char_into_string_at_position(&file->content, c, file->cursorPosition);
 
 	/* shift cursor to the end of string / text */
 	file->cursorPosition++;
 }
 
 
-void save_textfile(Textfile *file) {
+void save_edited_file(EditedFile *file) {
 	FILE *f;
 	errno_t err;
 	
@@ -61,7 +61,7 @@ void save_textfile(Textfile *file) {
 		exit(1);
 	}
 	else {
-		fprintf(f, file->text);
+		fprintf(f, file->content);
 	}
 	
 	if (f) {
