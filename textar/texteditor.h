@@ -19,4 +19,8 @@ void put_char_to_text_at_position(char **text, char c, int posn);
 /*  */
 void put_char_to_textfile_at_cursor_position(Textfile *file, char c);
 
+
+
+void save_textfile(Textfile *file);
+
 #endif
