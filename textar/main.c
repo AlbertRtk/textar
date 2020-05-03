@@ -56,13 +56,14 @@ int main(int argc, char *argv[]) {
 
 			/* Enter hit - put new line */
 			case ENTER_ASCII_VALUE:
+				put_char_to_textfile_at_cursor_position(&editedFile, NEW_LINE);
 				putchar(NEW_LINE);
 				c = NULL_CHAR;
 				break;
 
 			/* typing - put char to screen */
 			default:
-				putchar_to_text_at_position(&editedFile.text, c, 0);
+				put_char_to_textfile_at_cursor_position(&editedFile, c);
 				putchar(c);
 				c = NULL_CHAR;
 				break;

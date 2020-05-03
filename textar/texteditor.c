@@ -10,10 +10,11 @@ void init_textfile(Textfile *file) {
 	file->text = (char*)malloc(1);
 	file->name[0] = NULL_CHAR;
 	file->text[0] = NULL_CHAR;
+	file->cursorPosition = 0;
 }
 
 
-void putchar_to_text_at_position(char **text, char c, int posn) {
+void put_char_to_text_at_position(char **text, char c, int posn) {
 	int i;
 	int newLen;
 	char newChar[2] = { c, NULL_CHAR };
@@ -30,4 +31,13 @@ void putchar_to_text_at_position(char **text, char c, int posn) {
 	}
 	/* at position posn place new character c */
 	(*text)[posn] = c;
+}
+
+
+void put_char_to_textfile_at_cursor_position(Textfile *file, char c) {
+	/* put char into text */
+	put_char_to_text_at_position(&file->text, c, file->cursorPosition);
+
+	/* shift cursor to the end of string / text */
+	file->cursorPosition++;
 }
