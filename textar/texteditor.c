@@ -66,7 +66,7 @@ void shift_cursor_position_by_value(EditedFile *file, int shift) {
 	file->cursorPosition = get_cursor_position_within_range(newPosition, minPosition, maxPosition);
 
 	/* cursor position changed - move cursor on the screan */
-	if (oldPosition != newPosition) {
+	if (oldPosition != file->cursorPosition) {
 		COORD consolCursor;
 		consolCursor = get_console_cursor_position();
 		consolCursor.X += shift;
