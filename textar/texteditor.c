@@ -1,6 +1,7 @@
 #include "texteditor.h"
 #include "common.h"
 #include "display.h"
+#include "cmdcs.h"
 #include <stdlib.h>
 #include <string.h>
 #include <stdio.h>
@@ -52,15 +53,25 @@ void put_char_into_file_content_at_cursor_position(EditedFile *file, char c) {
 
 
 void shift_cursor_position_by_value(EditedFile *file, int shift) {
+	int oldPosition;	// current cursor position
 	int newPosition;	// cursor position after shift
 	int minPosition;	// min value for cursor position
 	int maxPosition;	// max value for cursor position
 
+	oldPosition = file->cursorPosition;
 	newPosition = file->cursorPosition + shift;
 	minPosition = 0;
 	maxPosition = strlen(file->content);
 
 	file->cursorPosition = get_cursor_position_within_range(newPosition, minPosition, maxPosition);
+
+	/* cursor position changed - move cursor on the screan */
+	if (oldPosition != newPosition) {
+		COORD consolCursor;
+		consolCursor = get_console_cursor_position();
+		consolCursor.X += shift;
+		goto_coord(&consolCursor);
+	}
 }
 
 

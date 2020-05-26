@@ -1,4 +1,5 @@
 #include "cmdcs.h"
+#include "common.h"
 
 
 COORD get_window_size() {
@@ -13,12 +14,33 @@ COORD get_window_size() {
 }
 
 
+COORD get_console_cursor_position() {
+	COORD cursorPosn;
+	CONSOLE_SCREEN_BUFFER_INFO csbi;
+
+	if (GetConsoleScreenBufferInfo(GetStdHandle(STD_OUTPUT_HANDLE), &csbi)) {
+		copy_coord(&csbi.dwCursorPosition, &cursorPosn);
+	}
+	else {
+		cursorPosn.X = 0;
+		cursorPosn.Y = TEXT_FIRTS_LINE;
+	}
+
+	return cursorPosn;
+}
+
+
 void gotoxy(int x, int y)
 {
 	COORD coord;
 	coord.X = x;
 	coord.Y = y;
 	SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), coord);
+}
+
+
+void goto_coord(const COORD *xy) {
+	gotoxy(xy->X, xy->Y);
 }
 
 

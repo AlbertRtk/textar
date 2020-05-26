@@ -42,6 +42,11 @@ int main(int argc, char *argv[]) {
 			c = _getch();
 		}
 
+		if (-32 == c) {
+			/* fetch the second value of extended key (arrows) */
+			c = _getch();	
+		}
+
 		/* taking action depending on c value */
 		switch (c) {
 
@@ -63,10 +68,12 @@ int main(int argc, char *argv[]) {
 
 			/*  */
 			case LEFT_ASCII_VALUE:
+				shift_cursor_position_left(&editedFile);
 				break;
 
 			/*  */
 			case RIGHT_ASCII_VALUE:
+				shift_cursor_position_right(&editedFile);
 				break;
 
 			/* typing - put char to screen */

@@ -13,8 +13,15 @@ Functions to deal with size of command line window and position of cursor
 COORD get_window_size();
 
 
+/* Returns current position of cursor in the console window */
+COORD get_console_cursor_position();
+
+
 /* Sets cursor at position (x, y) in command line window */
 void gotoxy(int x, int y);
+
+
+void goto_coord(const COORD *xy);
 
 
 /* Sets cursor at top left corner of cmd window */
