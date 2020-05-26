@@ -59,16 +59,27 @@ int main(int argc, char *argv[]) {
 			case ENTER_ASCII_VALUE:
 				put_char_into_file_content_at_cursor_position(&editedFile, NEW_LINE);
 				putchar(NEW_LINE);
-				c = NULL_CHAR;
+				break;
+
+			/*  */
+			case LEFT_ASCII_VALUE:
+				break;
+
+			/*  */
+			case RIGHT_ASCII_VALUE:
 				break;
 
 			/* typing - put char to screen */
 			default:
 				put_char_into_file_content_at_cursor_position(&editedFile, c);
 				putchar(c);
-				c = NULL_CHAR;
 				break;
 		}
+
+		if (NULL_CHAR != c) {
+			c = NULL_CHAR;
+		}
+			
 	}
 	
 	return 0;

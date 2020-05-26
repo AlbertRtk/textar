@@ -20,7 +20,11 @@ void put_char_into_string_at_position(char **text, char c, int posn);
 void put_char_into_file_content_at_cursor_position(EditedFile *file, char c);
 
 
+/*  */
+void shift_cursor_position_by_value(EditedFile *file, int shift);
 
+
+/*  */
 void save_edited_file(EditedFile *file);
 
 #endif

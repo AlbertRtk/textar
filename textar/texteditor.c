@@ -6,6 +6,9 @@
 #include <stdio.h>
 
 
+static int get_cursor_position_within_range(int posn, int min, int max);
+
+
 void init_file(EditedFile *file) {
 
 	file->name = (char*)malloc(1);
@@ -45,6 +48,36 @@ void put_char_into_file_content_at_cursor_position(EditedFile *file, char c) {
 
 	/* shift cursor to the end of string / text */
 	file->cursorPosition++;
+}
+
+
+void shift_cursor_position_by_value(EditedFile *file, int shift) {
+	int newPosition;
+	int minPosition;
+	int maxPosition;
+
+	newPosition = file->cursorPosition + shift;
+	minPosition = 0;
+	maxPosition = strlen(file->content);
+
+	file->cursorPosition = get_cursor_position_within_range(newPosition, minPosition, maxPosition);
+}
+
+
+static int get_cursor_position_within_range(int posn, int min, int max) {
+	int output;
+
+	if (posn < min) {
+		output = min;
+	}
+	else if (posn > max) {
+		output = max;
+	}
+	else {
+		output = posn;
+	}
+
+	return output;
 }
 
 
