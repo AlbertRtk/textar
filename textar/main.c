@@ -80,6 +80,9 @@ int main(int argc, char *argv[]) {
 			case DOWN_ASCII_VALUE:
 				break;
 
+			//case BACKSPACE_ASCII_VALUE:
+			//	break;
+
 			/* typing - put char to screen */
 			default:
 				put_char_at_cursor_position(&editedFile, c);
