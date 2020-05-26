@@ -15,5 +15,4 @@ void display_header(const COORD *wSize);
 /* Print footer at the bottom of cmd window */
 void display_footer(const COORD *wSize);
 
-
 #endif

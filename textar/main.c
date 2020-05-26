@@ -35,6 +35,7 @@ int main(int argc, char *argv[]) {
 			display_header(&wSize);
 			display_footer(&wSize);
 			gotoxy(0, 2);
+			printf("%s", editedFile.content);
 		}
 
 		/* catching char if button was hit */
@@ -62,24 +63,26 @@ int main(int argc, char *argv[]) {
 
 			/* Enter hit - put new line */
 			case ENTER_ASCII_VALUE:
-				put_char_into_file_content_at_cursor_position(&editedFile, NEW_LINE);
-				putchar(NEW_LINE);
+				put_char_at_cursor_position(&editedFile, NEW_LINE);
 				break;
 
-			/*  */
 			case LEFT_ASCII_VALUE:
 				shift_cursor_position_left(&editedFile);
 				break;
 
-			/*  */
 			case RIGHT_ASCII_VALUE:
 				shift_cursor_position_right(&editedFile);
 				break;
 
+			case UP_ASCII_VALUE:
+				break;
+
+			case DOWN_ASCII_VALUE:
+				break;
+
 			/* typing - put char to screen */
 			default:
-				put_char_into_file_content_at_cursor_position(&editedFile, c);
-				putchar(c);
+				put_char_at_cursor_position(&editedFile, c);
 				break;
 		}
 

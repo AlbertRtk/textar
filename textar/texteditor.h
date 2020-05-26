@@ -17,7 +17,7 @@ void put_char_into_string_at_position(char **text, char c, int posn);
 
 
 /* put a given character c into file content (string) at position of the cursor */
-void put_char_into_file_content_at_cursor_position(EditedFile *file, char c);
+void put_char_at_cursor_position(EditedFile *file, char c);
 
 
 /* shifts cursor position by given value */

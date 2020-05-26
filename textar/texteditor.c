@@ -7,7 +7,7 @@
 #include <stdio.h>
 
 
-static int get_cursor_position_within_range(int posn, int min, int max);
+static int force_cursor_position_within_range(int posn, int min, int max);
 
 
 void init_file(EditedFile *file) {
@@ -43,12 +43,34 @@ void put_char_into_string_at_position(char **text, char c, int posn) {
 }
 
 
-void put_char_into_file_content_at_cursor_position(EditedFile *file, char c) {
+void put_char_at_cursor_position(EditedFile *file, char c) {
+	int i;
+	int textLen;
+
 	/* put char into text */
 	put_char_into_string_at_position(&file->content, c, file->cursorPosition);
+	putchar(c);
 
-	/* shift cursor to the end of string / text */
+	/* shift cursor position */
 	file->cursorPosition++;
+
+	textLen = strlen(file->content);
+
+	/* cursor position is not in the end of text - re-print characters after cursor */
+	if (textLen != file->cursorPosition) {
+		COORD consolCursorPosn;
+
+		/* remember cursor position*/
+		consolCursorPosn = get_console_cursor_position();
+
+		/* re-print end of string */
+		for (i = file->cursorPosition; i < textLen; i++) {
+			putchar(file->content[i]);
+		}
+
+		/* restore cursor position */
+		goto_coord(&consolCursorPosn);
+	}
 }
 
 
@@ -63,14 +85,14 @@ void shift_cursor_position_by_value(EditedFile *file, int shift) {
 	minPosition = 0;
 	maxPosition = strlen(file->content);
 
-	file->cursorPosition = get_cursor_position_within_range(newPosition, minPosition, maxPosition);
+	file->cursorPosition = force_cursor_position_within_range(newPosition, minPosition, maxPosition);
 
 	/* cursor position changed - move cursor on the screan */
 	if (oldPosition != file->cursorPosition) {
-		COORD consolCursor;
-		consolCursor = get_console_cursor_position();
-		consolCursor.X += shift;
-		goto_coord(&consolCursor);
+		COORD consolCursorPosn;
+		consolCursorPosn = get_console_cursor_position();
+		consolCursorPosn.X += shift;
+		goto_coord(&consolCursorPosn);
 	}
 }
 
@@ -85,7 +107,7 @@ void shift_cursor_position_right(EditedFile *file) {
 }
 
 
-static int get_cursor_position_within_range(int posn, int min, int max) {
+static int force_cursor_position_within_range(int posn, int min, int max) {
 	int output;
 
 	if (posn < min) {

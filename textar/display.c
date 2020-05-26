@@ -32,5 +32,3 @@ void display_footer(const COORD *wSize) {
 	goto_bottom_left();
 	printf("crtl-x: Exit | ");
 }
-
-
