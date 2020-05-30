@@ -9,6 +9,11 @@ typedef struct EditedFile_T {
 } EditedFile;
 
 
+typedef enum {
+	SHIFT_LEFT = -1,
+	SHIFT_RIGHT = 1
+} Shift;
+
 void init_file(EditedFile *file);
 
 
@@ -21,7 +26,7 @@ void put_char_at_cursor_position(EditedFile *file, char c);
 
 
 /* shifts cursor position by given value */
-void shift_cursor_position_by_value(EditedFile *file, int shift);
+void shift_cursor_position_by_unit_value(EditedFile *file, int shift);
 
 
 /* shifts cursor position one char to the left */

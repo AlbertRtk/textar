@@ -74,7 +74,7 @@ void put_char_at_cursor_position(EditedFile *file, char c) {
 }
 
 
-void shift_cursor_position_by_value(EditedFile *file, int shift) {
+void shift_cursor_position_by_unit_value(EditedFile *file, Shift shift) {
 	int oldPosition;	// current cursor position
 	int newPosition;	// cursor position after shift
 	int minPosition;	// min value for cursor position
@@ -93,15 +93,16 @@ void shift_cursor_position_by_value(EditedFile *file, int shift) {
 		consolCursorPosn = get_console_cursor_position();
 		
 		/* end of line and shifting right - jump to next line*/
-		if (1 == shift && NEW_LINE == file->content[file->cursorPosition - 1]) {
+		if (SHIFT_RIGHT == shift && NEW_LINE == file->content[file->cursorPosition - 1]) {
 			consolCursorPosn.X = 0;
 			consolCursorPosn.Y += shift;
 		}
 		/* beginning of line and shifting left - jump to previous line */
-		else if (-1 == shift && NEW_LINE == file->content[file->cursorPosition]) {
+		else if (SHIFT_LEFT == shift && NEW_LINE == file->content[file->cursorPosition]) {
 			consolCursorPosn.X = 0;		// TODO: NEEDS TO GO TO THE END OF LINE, NOT BEGINNING!
 			consolCursorPosn.Y += shift;
 		}
+		/* shift within line */
 		else {
 			consolCursorPosn.X += shift;
 		}
@@ -112,12 +113,12 @@ void shift_cursor_position_by_value(EditedFile *file, int shift) {
 
 
 void shift_cursor_position_left(EditedFile *file) {
-	shift_cursor_position_by_value(file, -1);
+	shift_cursor_position_by_unit_value(file, SHIFT_LEFT);
 }
 
 
 void shift_cursor_position_right(EditedFile *file) {
-	shift_cursor_position_by_value(file, 1);
+	shift_cursor_position_by_unit_value(file, SHIFT_RIGHT);
 }
 
 
