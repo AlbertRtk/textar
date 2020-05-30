@@ -99,7 +99,7 @@ void shift_cursor_position_by_unit_value(EditedFile *file, Shift shift) {
 		}
 		/* beginning of line and shifting left - jump to previous line */
 		else if (SHIFT_LEFT == shift && NEW_LINE == file->content[file->cursorPosition]) {
-			consolCursorPosn.X = 0;		// TODO: NEEDS TO GO TO THE END OF LINE, NOT BEGINNING!
+			consolCursorPosn.X = 0;																// TODO: NEEDS TO GO TO THE END OF LINE, NOT BEGINNING!
 			consolCursorPosn.Y += shift;
 		}
 		/* shift within line */
@@ -165,5 +165,4 @@ void save_edited_file(EditedFile *file) {
 			exit(1);
 		}
 	}
-	
 }
