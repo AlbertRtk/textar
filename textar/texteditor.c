@@ -91,7 +91,21 @@ void shift_cursor_position_by_value(EditedFile *file, int shift) {
 	if (oldPosition != file->cursorPosition) {
 		COORD consolCursorPosn;
 		consolCursorPosn = get_console_cursor_position();
-		consolCursorPosn.X += shift;
+		
+		/* end of line and shifting right - jump to next line*/
+		if (1 == shift && NEW_LINE == file->content[file->cursorPosition - 1]) {
+			consolCursorPosn.X = 0;
+			consolCursorPosn.Y += shift;
+		}
+		/* beginning of line and shifting left - jump to previous line */
+		else if (-1 == shift && NEW_LINE == file->content[file->cursorPosition]) {
+			consolCursorPosn.X = 0;		// TODO: NEEDS TO GO TO THE END OF LINE, NOT BEGINNING!
+			consolCursorPosn.Y += shift;
+		}
+		else {
+			consolCursorPosn.X += shift;
+		}
+		
 		goto_coord(&consolCursorPosn);
 	}
 }
