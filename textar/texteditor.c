@@ -10,7 +10,7 @@
 static int force_cursor_position_within_range(int posn, int min, int max);
 
 
-static int previous_new_line_position();
+static int previous_new_line_position(EditedFile *file);
 
 
 void init_file(EditedFile *file) {
