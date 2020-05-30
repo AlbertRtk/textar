@@ -10,7 +10,7 @@
 static int force_cursor_position_within_range(int posn, int min, int max);
 
 
-static int previous_new_line_position(EditedFile *file);
+static int get_previous_new_line_position(EditedFile *file);
 
 
 void init_file(EditedFile *file) {
@@ -106,7 +106,7 @@ void shift_cursor_position_by_unit_value(EditedFile *file, Shift shift) {
 		/* beginning of line and shifting left - jump to previous line */
 		else if (SHIFT_LEFT == shift && (NEW_LINE == file->content[file->cursorPosition] || 0 == consolCursorPosn.X)) {
 			/* calculate cursore position in relation to previous new line */
-			tempPositionX = previous_new_line_position(file);
+			tempPositionX = get_previous_new_line_position(file);
 
 			if (tempPositionX) {
 				/* new line sign found */
@@ -169,7 +169,7 @@ static int force_cursor_position_within_range(int posn, int min, int max) {
 }
 
 
-static int previous_new_line_position(EditedFile *file) {
+static int get_previous_new_line_position(EditedFile *file) {
 	int i;
 	i = file->cursorPosition - 1;
 
