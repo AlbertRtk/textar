@@ -43,11 +43,6 @@ int main(int argc, char *argv[]) {
 			c = _getch();
 		}
 
-		if (-32 == c) {
-			/* fetch the second value of extended key (arrows) */
-			c = _getch();	
-		}
-
 		/* taking action depending on c value */
 		switch (c) {
 
@@ -66,24 +61,33 @@ int main(int argc, char *argv[]) {
 				put_char_at_cursor_position(&editedFile, NEW_LINE);
 				break;
 
-			case LEFT_ASCII_VALUE:
-				shift_cursor_position_left(&editedFile);
-				break;
-
-			case RIGHT_ASCII_VALUE:
-				shift_cursor_position_right(&editedFile);
-				break;
-
-			case UP_ASCII_VALUE:
-				shift_cursor_position_up(&editedFile);
-				break;
-
-			case DOWN_ASCII_VALUE:
-				shift_cursor_position_down(&editedFile);
-				break;
-
 			//case BACKSPACE_ASCII_VALUE:
 			//	break;
+
+			case EXTENDED_KEY:
+				/* fetch the second value of extended key (arrows) */
+				switch (_getch()) {
+
+					case LEFT_ASCII_VALUE:
+						shift_cursor_position_left(&editedFile);
+						break;
+
+					case RIGHT_ASCII_VALUE:
+						shift_cursor_position_right(&editedFile);
+						break;
+
+					case UP_ASCII_VALUE:
+						shift_cursor_position_up(&editedFile);
+						break;
+
+					case DOWN_ASCII_VALUE:
+						shift_cursor_position_down(&editedFile);
+						break;
+
+					default:
+						break;
+				}
+				break;
 
 			/* typing - put char to screen */
 			default:
