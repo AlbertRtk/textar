@@ -75,9 +75,11 @@ int main(int argc, char *argv[]) {
 				break;
 
 			case UP_ASCII_VALUE:
+				shift_cursor_position_up(&editedFile);
 				break;
 
 			case DOWN_ASCII_VALUE:
+				shift_cursor_position_down(&editedFile);
 				break;
 
 			//case BACKSPACE_ASCII_VALUE:

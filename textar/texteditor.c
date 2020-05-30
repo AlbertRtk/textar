@@ -10,8 +10,10 @@
 static int force_cursor_position_within_range(int posn, int min, int max);
 
 
-void init_file(EditedFile *file) {
+static int previous_new_line_position();
 
+
+void init_file(EditedFile *file) {
 	file->name = (char*)malloc(1);
 	file->name = (char*)realloc(file->name, 13);
 	strcpy_s(file->name, 13, "New file.txt");
@@ -90,16 +92,33 @@ void shift_cursor_position_by_unit_value(EditedFile *file, Shift shift) {
 	/* cursor position changed - move cursor on the screan */
 	if (oldPosition != file->cursorPosition) {
 		COORD consolCursorPosn;
+		COORD consoleSize;
+		int tempPositionX;
+
 		consolCursorPosn = get_console_cursor_position();
+		consoleSize = get_window_size();
 		
 		/* end of line and shifting right - jump to next line*/
-		if (SHIFT_RIGHT == shift && NEW_LINE == file->content[file->cursorPosition - 1]) {
+		if (SHIFT_RIGHT == shift && (NEW_LINE == file->content[file->cursorPosition - 1] || consoleSize.X - 1 == consolCursorPosn.X)) {
 			consolCursorPosn.X = 0;
 			consolCursorPosn.Y += shift;
 		}
 		/* beginning of line and shifting left - jump to previous line */
-		else if (SHIFT_LEFT == shift && NEW_LINE == file->content[file->cursorPosition]) {
-			consolCursorPosn.X = 0;																// TODO: NEEDS TO GO TO THE END OF LINE, NOT BEGINNING!
+		else if (SHIFT_LEFT == shift && (NEW_LINE == file->content[file->cursorPosition] || 0 == consolCursorPosn.X)) {
+			/* calculate cursore position in relation to previous new line */
+			tempPositionX = previous_new_line_position(file);
+
+			if (tempPositionX) {
+				/* new line sign found */
+				tempPositionX = file->cursorPosition - tempPositionX - 1;
+			}
+			else {
+				/* no new line - refere to beginnign of string */
+				tempPositionX = file->cursorPosition;
+			}
+			
+			/* on the screen lines are wrapped - calculate position of last line end in the console */
+			consolCursorPosn.X = tempPositionX % consoleSize.X;
 			consolCursorPosn.Y += shift;
 		}
 		/* shift within line */
@@ -122,6 +141,17 @@ void shift_cursor_position_right(EditedFile *file) {
 }
 
 
+
+void shift_cursor_position_up(EditedFile *file) {
+
+}
+
+
+void shift_cursor_position_down(EditedFile *file) {
+
+}
+
+
 static int force_cursor_position_within_range(int posn, int min, int max) {
 	int output;
 
@@ -136,6 +166,18 @@ static int force_cursor_position_within_range(int posn, int min, int max) {
 	}
 
 	return output;
+}
+
+
+static int previous_new_line_position(EditedFile *file) {
+	int i;
+	i = file->cursorPosition - 1;
+
+	while (i > 0 && NEW_LINE != file->content[i]) {
+		i--;
+	}
+
+	return i;
 }
 
 

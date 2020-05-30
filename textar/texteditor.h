@@ -26,7 +26,7 @@ void put_char_at_cursor_position(EditedFile *file, char c);
 
 
 /* shifts cursor position by given value */
-void shift_cursor_position_by_unit_value(EditedFile *file, int shift);
+void shift_cursor_position_by_unit_value(EditedFile *file, Shift shift);
 
 
 /* shifts cursor position one char to the left */
@@ -35,6 +35,14 @@ void shift_cursor_position_left(EditedFile *file);
 
 /* shifts cursor position one char to the right */
 void shift_cursor_position_right(EditedFile *file);
+
+
+/* shifts cursor position one line up */
+void shift_cursor_position_up(EditedFile *file);
+
+
+/* shifts cursor position one line up */
+void shift_cursor_position_down(EditedFile *file);
 
 
 /*  */
