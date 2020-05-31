@@ -27,7 +27,7 @@ void display_header(const COORD *wSize) {
 
 
 void display_footer(const COORD *wSize) {
-	gotoxy(0, wSize->Y - 2);
+	gotoxy(0, wSize->Y - TEXT_LAST_LINE_FROM_BOTTOM + 1);
 	print_horizontal_separator(wSize->X);
 	goto_bottom_left();
 	printf("crtl-x: Exit | ");

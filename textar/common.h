@@ -16,5 +16,6 @@
 #define RIGHT_ASCII_VALUE 77
 
 #define TEXT_FIRTS_LINE 2
+#define TEXT_LAST_LINE_FROM_BOTTOM 3
 
 #endif

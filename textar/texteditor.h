@@ -12,7 +12,14 @@ typedef struct EditedFile_T {
 typedef enum {
 	SHIFT_LEFT = -1,
 	SHIFT_RIGHT = 1
-} Shift;
+} HShift;
+
+
+typedef enum {
+	MOVE_UP = -1,
+	MOVE_DOWN = 1
+} VMove;
+
 
 void init_file(EditedFile *file);
 
@@ -23,10 +30,6 @@ void put_char_into_string_at_position(char **text, char c, int posn);
 
 /* put a given character c into file content (string) at position of the cursor */
 void put_char_at_cursor_position(EditedFile *file, char c);
-
-
-/* shifts cursor position by given value */
-void shift_cursor_position_by_unit_value(EditedFile *file, Shift shift);
 
 
 /* shifts cursor position one char to the left */

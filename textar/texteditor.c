@@ -7,10 +7,11 @@
 #include <stdio.h>
 
 
+static void shift_cursor_position_by_unit_value(EditedFile *file, HShift shift);
+static void move_cursor_position_verticaly(EditedFile *file, VMove shift);
 static int force_cursor_position_within_range(int posn, int min, int max);
-
-
-static int get_previous_new_line_position(EditedFile *file);
+static int get_previous_new_line_position(const EditedFile *file);
+static void calculate_line_end_console_position(COORD *consoleCursorPosn, const EditedFile *file);
 
 
 void init_file(EditedFile *file) {
@@ -76,7 +77,7 @@ void put_char_at_cursor_position(EditedFile *file, char c) {
 }
 
 
-void shift_cursor_position_by_unit_value(EditedFile *file, Shift shift) {
+static void shift_cursor_position_by_unit_value(EditedFile *file, HShift shift) {
 	int oldPosition;	// current cursor position
 	int newPosition;	// cursor position after shift
 	int minPosition;	// min value for cursor position
@@ -91,42 +92,27 @@ void shift_cursor_position_by_unit_value(EditedFile *file, Shift shift) {
 
 	/* cursor position changed - move cursor on the screan */
 	if (oldPosition != file->cursorPosition) {
-		COORD consolCursorPosn;
+		COORD consoleCursorPosn;
 		COORD consoleSize;
-		int tempPositionX;
 
-		consolCursorPosn = get_console_cursor_position();
+		consoleCursorPosn = get_console_cursor_position();
 		consoleSize = get_window_size();
 		
 		/* end of line and shifting right - jump to next line*/
-		if (SHIFT_RIGHT == shift && (NEW_LINE == file->content[file->cursorPosition - 1] || consoleSize.X - 1 == consolCursorPosn.X)) {
-			consolCursorPosn.X = 0;
-			consolCursorPosn.Y += shift;
+		if (SHIFT_RIGHT == shift && (NEW_LINE == file->content[file->cursorPosition - 1] || consoleSize.X - 1 == consoleCursorPosn.X)) {
+			consoleCursorPosn.X = 0;
+			consoleCursorPosn.Y += 1;
 		}
 		/* beginning of line and shifting left - jump to previous line */
-		else if (SHIFT_LEFT == shift && (NEW_LINE == file->content[file->cursorPosition] || 0 == consolCursorPosn.X)) {
-			/* calculate cursore position in relation to previous new line */
-			tempPositionX = get_previous_new_line_position(file);
-
-			if (tempPositionX) {
-				/* new line sign found */
-				tempPositionX = file->cursorPosition - tempPositionX - 1;
-			}
-			else {
-				/* no new line - refere to beginnign of string */
-				tempPositionX = file->cursorPosition;
-			}
-			
-			/* on the screen lines are wrapped - calculate position of last line end in the console */
-			consolCursorPosn.X = tempPositionX % consoleSize.X;
-			consolCursorPosn.Y += shift;
+		else if (SHIFT_LEFT == shift && (NEW_LINE == file->content[file->cursorPosition] || 0 == consoleCursorPosn.X)) {
+			calculate_line_end_console_position(&consoleCursorPosn, file);
 		}
 		/* shift within line */
 		else {
-			consolCursorPosn.X += shift;
+			consoleCursorPosn.X += shift;
 		}
 		
-		goto_coord(&consolCursorPosn);
+		goto_coord(&consoleCursorPosn);
 	}
 }
 
@@ -141,14 +127,56 @@ void shift_cursor_position_right(EditedFile *file) {
 }
 
 
+static void move_cursor_position_verticaly(EditedFile *file, VMove move) {		// ONLY UP WORKS !!!
+	COORD consoleSize;
+	COORD consoleCursorPosn;
+	COORD tempConsoleCursorPosn;
+	int prevNewLinePosn;
+
+	consoleSize = get_window_size();
+	prevNewLinePosn = get_previous_new_line_position(file);
+	consoleCursorPosn = get_console_cursor_position();
+
+	/* new line sign found */
+	if (prevNewLinePosn) {
+		copy_coord(&consoleCursorPosn, &tempConsoleCursorPosn);
+
+		/* set cursor in the end of previous line */
+		file->cursorPosition = prevNewLinePosn;
+		calculate_line_end_console_position(&tempConsoleCursorPosn, file);
+
+		/* previous line in console shorter than current - cursor in the end of line */
+		if (tempConsoleCursorPosn.X < consoleCursorPosn.X) {
+			copy_coord(&tempConsoleCursorPosn, &consoleCursorPosn);
+		}
+		/* previous line in console longer than current - change only Y cooridate */
+		else {
+			consoleCursorPosn.Y -= 1;
+
+			/* correct text cursor position by difference between previous and extimated EOF position in console */
+			file->cursorPosition -= (tempConsoleCursorPosn.X - consoleCursorPosn.X);
+		}
+	}
+	/* no new line sign, text longer than window width */
+	else if (file->cursorPosition >= consoleSize.X) {
+		consoleCursorPosn.Y -= 1;
+		file->cursorPosition -= consoleSize.X;
+	}
+	else {
+		/* do nothing */
+	}
+
+	goto_coord(&consoleCursorPosn);
+}
+
 
 void shift_cursor_position_up(EditedFile *file) {
-
+	move_cursor_position_verticaly(file, MOVE_UP);
 }
 
 
 void shift_cursor_position_down(EditedFile *file) {
-
+	move_cursor_position_verticaly(file, MOVE_DOWN);
 }
 
 
@@ -169,7 +197,7 @@ static int force_cursor_position_within_range(int posn, int min, int max) {
 }
 
 
-static int get_previous_new_line_position(EditedFile *file) {
+static int get_previous_new_line_position(const EditedFile *file) {
 	int i;
 	i = file->cursorPosition - 1;
 
@@ -178,6 +206,29 @@ static int get_previous_new_line_position(EditedFile *file) {
 	}
 
 	return i;
+}
+
+
+void calculate_line_end_console_position(COORD *consoleCursorPosn, const EditedFile *file) {
+	COORD consoleSize;
+	int tempPositionX;
+
+	/* calculate cursore position in relation to previous new line */
+	tempPositionX = get_previous_new_line_position(file);
+
+	if (tempPositionX) {
+		/* new line sign found */
+		tempPositionX = file->cursorPosition - tempPositionX - 1;
+	}
+	else {
+		/* no new line - refere to beginnign of string */
+		tempPositionX = file->cursorPosition;
+	}
+
+	/* on the screen lines are wrapped - calculate position of last line end in the console */
+	consoleSize = get_window_size();
+	consoleCursorPosn->X = tempPositionX % consoleSize.X;
+	consoleCursorPosn->Y -= 1;
 }
 
 

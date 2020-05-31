@@ -81,7 +81,7 @@ int main(int argc, char *argv[]) {
 						break;
 
 					case DOWN_ASCII_VALUE:
-						shift_cursor_position_down(&editedFile);
+						//shift_cursor_position_down(&editedFile);
 						break;
 
 					default:
